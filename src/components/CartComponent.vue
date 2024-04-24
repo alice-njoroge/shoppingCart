@@ -1,5 +1,6 @@
 <script setup>
 import {computed, ref, toRaw, watch} from "vue";
+import CartInput from "@/components/CartInput.vue";
 
 defineEmits({
   'showCart': null,
@@ -9,7 +10,9 @@ defineEmits({
     } else {
       return true
     }
-  }
+  },
+  'increase': null,
+  'decrease': null
 });
 const props = defineProps({
   cartItems : {
@@ -26,7 +29,9 @@ watch(
     }
 )
 const total = computed(() => {
-  return _cartItems.value.reduce((acc, item) => acc + (item.price * item.qty), 0)
+  return _cartItems.value.reduce((acc, item) => {
+    return acc + (item.price * item.qty)
+  }, 0)
 })
 console.log(toRaw(_cartItems.value));
 
@@ -34,7 +39,6 @@ console.log(toRaw(_cartItems.value));
 </script>
 
 <template>
-  <Transition>
   <div class="relative z-10" aria-labelledby="slide-over-title" role="dialog" aria-modal="true">
     <!--
       Background backdrop, show/hide based on slide-over state.
@@ -101,8 +105,13 @@ console.log(toRaw(_cartItems.value));
                               <p class="mt-1 text-sm text-gray-500">{{ item.category }}</p>
                             </div>
                             <div class="flex flex-1 items-end justify-between text-sm">
-                              <p class="text-gray-500"> Qty: {{ item.qty }}</p>
 
+                            <CartInput
+                                @increaseQty="$emit('increase', item.id)"
+                                @decreaseQty="$emit('decrease', item.id)"
+                                v-model:qty="item.qty"
+                                :qty="item.qty"
+                            />
                               <div class="flex">
                                 <button type="button" class="font-medium text-indigo-600 hover:text-indigo-500"
                                         @click="$emit('removeItem', item.id)">Remove
@@ -144,19 +153,9 @@ console.log(toRaw(_cartItems.value));
         </div>
       </div>
     </div>
-  </Transition>
 
 </template>
 <style scoped>
-.p-enter-active,
-.p-leave-active {
-  transition: opacity 500ms ease-in-out
-}
-
-.p-enter-from,
-.p-leave-to {
-  opacity: 0;
-}
 
 
 </style>
