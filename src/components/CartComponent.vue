@@ -1,5 +1,33 @@
 <script setup>
-defineEmits(['showCart'])
+import {ref, toRaw, watch} from "vue";
+
+defineEmits({
+  'showCart': null,
+  'removeItem': (item) => {
+    if (!item && typeof item !== 'number'){
+      return false
+    }
+    else {
+      return  true
+    }
+  }
+});
+const props = defineProps({
+  cartItems : {
+    type: Array,
+    default: () => [],
+  }
+});
+
+const _cartItems = ref([...props.cartItems]);
+watch(
+    ()=>props.cartItems,
+    ()=>{
+      _cartItems.value = [...props.cartItems]
+    }
+)
+console.log(toRaw(_cartItems.value));
+
 
 </script>
 
@@ -48,28 +76,31 @@ defineEmits(['showCart'])
                 </div>
 
                 <div class="mt-8">
-                  <div class="flow-root">
+                  <div v-if="!_cartItems.length">
+                    Your cart items will be displayed here when you start shopping :)
+                  </div>
+                  <div class="flow-root" v-else>
                     <ul role="list" class="-my-6 divide-y divide-gray-200">
-                      <li class="flex py-6">
+                      <li class="flex py-6" v-for="item in _cartItems">
                         <div class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-                          <img src="https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-01.jpg" alt="Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt." class="h-full w-full object-cover object-center">
+                          <img :src="item.thumbnail" alt="" class="h-full w-full object-cover object-center">
                         </div>
 
                         <div class="ml-4 flex flex-1 flex-col">
                           <div>
                             <div class="flex justify-between text-base font-medium text-gray-900">
                               <h3>
-                                <a href="#">Throwback Hip Bag</a>
+                                {{item.title}}
                               </h3>
-                              <p class="ml-4">$90.00</p>
+                              <p class="ml-4">{{ `$${Number(item.price).toFixed(2)}` }}</p>
                             </div>
-                            <p class="mt-1 text-sm text-gray-500">Salmon</p>
+                            <p class="mt-1 text-sm text-gray-500">{{item.category}}</p>
                           </div>
                           <div class="flex flex-1 items-end justify-between text-sm">
                             <p class="text-gray-500">Qty 1</p>
 
                             <div class="flex">
-                              <button type="button" class="font-medium text-indigo-600 hover:text-indigo-500">Remove</button>
+                              <button type="button" class="font-medium text-indigo-600 hover:text-indigo-500" @click="$emit('removeItem', item.id)">Remove</button>
                             </div>
                           </div>
                         </div>
@@ -80,18 +111,18 @@ defineEmits(['showCart'])
               </div>
 
               <div class="border-t border-gray-200 px-4 py-6 sm:px-6">
-                <div class="flex justify-between text-base font-medium text-gray-900">
+                <div class="flex justify-between text-base font-medium text-gray-900" v-if="_cartItems.length > 0">
                   <p>Subtotal</p>
                   <p>$262.00</p>
                 </div>
-                <p class="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
-                <div class="mt-6">
+                <p class="mt-0.5 text-sm text-gray-500" v-if="_cartItems.length > 0">Shipping and taxes calculated at checkout.</p>
+                <div class="mt-6" v-if="_cartItems.length > 0">
                   <a href="#" class="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700">Checkout</a>
                 </div>
                 <div class="mt-6 flex justify-center text-center text-sm text-gray-500">
                   <p>
                     or
-                    <button type="button" class="font-medium text-indigo-600 hover:text-indigo-500">
+                    <button @click="$emit('showCart', false)" type="button" class="font-medium text-indigo-600 hover:text-indigo-500">
                       Continue Shopping
                       <span aria-hidden="true"> &rarr;</span>
                     </button>

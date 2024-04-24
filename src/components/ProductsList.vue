@@ -33,11 +33,13 @@ onMounted(() => {
 <template>
 
   <div class="card-wrapper">
-    <div class=" h-[400px] overflow-hidden object-cover">
-      <img :src="product.images[1]" alt="">
+    <div class=" h-200 object-cover">
+      <img class="overflow-hidden h-[200px]" :src="product.thumbnail" alt="">
     </div>
-    <h6 class="mb-2 text-2xl font-bold tracking-tight text-blue-900 text-center ">{{ product.title }}</h6>
-    <div class="h-18">
+    <div class="h-10 mb-1">
+      <h6 class="mb-2 text-2xl font-bold tracking-tight text-blue-900 text-center ">{{ product.title }}</h6>
+    </div>
+    <div class="h-20">
       <p class="font-normal text-gray-700">{{ product.description }}</p>
     </div>
     <div class="h-5 font-bold flex flex-wrap justify-between">
