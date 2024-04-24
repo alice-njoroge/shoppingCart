@@ -13,12 +13,15 @@ onMounted(async () => {
   products.value = response.products
 });
 const addToCart = (product) => {
-  console.log("adding to cart: ", product);
-  cartItems.value.push(product)
+  const index = cartItems.value.findIndex( item => item.id === product.id)
+  if (index > -1){
+    cartItems.value[index].qty += 1;
+  } else {
+    cartItems.value.push({...product, qty: 1})
+  }
 }
 const showCart = ref(false);
 const removeItem = (id) => {
-  console.log("payload", id);
   cartItems.value = cartItems.value.filter(item => item.id !== id)
 }
 
