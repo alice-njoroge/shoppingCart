@@ -14,7 +14,14 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(['showModal']);
+const emit = defineEmits({
+  'showModal' : null,
+  'addProduct': (product) => {
+    if (typeof product !== 'object'){
+      return false
+    }
+  }
+});
 
 const form = ref({
   title: '',
@@ -36,7 +43,10 @@ const showError = computed(()=> {
     price: formDirty.value.price === true && form.value.price <= 0,
     category: formDirty.value.category === true && form.value.category === ''
   }
-})
+});
+const handleSubmit = () => {
+  emit('addProduct', form.value);
+}
 
 </script>
 
@@ -47,7 +57,7 @@ const showError = computed(()=> {
     </template>
     <template #modalBody>
       {{showError}}
-      <form class="p-4 md:p-5">
+      <form @submit.prevent="handleSubmit" class="p-4 md:p-5">
         <div class="grid gap-4 mb-4 grid-cols-2">
           <div class="col-span-2">
             <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Title</label>

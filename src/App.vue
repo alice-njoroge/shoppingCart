@@ -44,7 +44,10 @@ const decreaseByOne = (id) => {
 }
 
 const showModal = ref(false);
-
+const addProduct = (product) => {
+  products.value.push(product)
+  console.log("productt", product)
+}
 </script>
 <template>
   <HeaderComponent class="sticky top-0" @show-cart="showCart=$event" @show-modal="showModal=$event" />
@@ -52,7 +55,9 @@ const showModal = ref(false);
     <AddProduct
         :show-modal="showModal"
         @show-modal="showModal=$event"
-        :categories="categories">
+        :categories="categories"
+        @add-product="addProduct"
+    >
     </AddProduct>
     <div class="container m-auto w-full justify-center flex flex-wrap">
       <transition name="p">
