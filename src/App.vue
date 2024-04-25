@@ -7,11 +7,16 @@ import AddProduct from "@/components/AddProduct.vue";
 
 const products = ref([]);
 const cartItems = ref([]);
+const categories = ref([]);
+
 
 onMounted(async () => {
   const data = await fetch('https://dummyjson.com/products');
   const response = await data.json()
   products.value = response.products
+
+  categories.value = [... new Set(products.value.map(product => product.category))]
+
 });
 const addToCart = (product) => {
   const index = cartItems.value.findIndex( item => item.id === product.id)
@@ -44,7 +49,11 @@ const showModal = ref(false);
 <template>
   <HeaderComponent class="sticky top-0" @show-cart="showCart=$event" @show-modal="showModal=$event" />
   <main>
-    <AddProduct :show-modal="showModal" @show-modal="showModal=$event"></AddProduct>
+    <AddProduct
+        :show-modal="showModal"
+        @show-modal="showModal=$event"
+        :categories="categories">
+    </AddProduct>
     <div class="container m-auto w-full justify-center flex flex-wrap">
       <transition name="p">
       <CartComponent

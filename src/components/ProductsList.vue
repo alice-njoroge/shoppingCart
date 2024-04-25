@@ -45,7 +45,7 @@ onMounted(() => {
     <div class="h-5 font-bold flex flex-wrap justify-between">
       <span> Rating: {{ product.rating }} </span>
       <span> Price: {{ product.price }}</span>
-      <span> Price: {{ product.stock }}</span>
+      <span> In Stock: {{ product.stock }}</span>
     </div>
     <div class="flex flex-wrap justify-end h-10 my-1">
       <button type="button" @click="addToCart(product)" class="button-wrapper bottom-0 right-0 ">Add to Cart</button>
