@@ -3,6 +3,7 @@ import {onMounted, ref} from "vue";
 import HeaderComponent from "@/components/HeaderComponent.vue";
 import ProductsList from "@/components/ProductsList.vue";
 import CartComponent from "@/components/CartComponent.vue";
+import AddProduct from "@/components/AddProduct.vue";
 
 const products = ref([]);
 const cartItems = ref([]);
@@ -32,15 +33,18 @@ const increaseByOne = (id) => {
 
 const decreaseByOne = (id) => {
   const index = cartItems.value.findIndex(item => item.id === id)
-  if (cartItems.value[index].qty >= 0){
+  if (cartItems.value[index].qty > 0){
     cartItems.value[index].qty -= 1
   };
 }
 
+const showModal = ref(false);
+
 </script>
 <template>
-  <HeaderComponent class="sticky top-0" @show-cart="showCart=$event"/>
+  <HeaderComponent class="sticky top-0" @show-cart="showCart=$event" @show-modal="showModal=$event" />
   <main>
+    <AddProduct :show-modal="showModal" @show-modal="showModal=$event"></AddProduct>
     <div class="container m-auto w-full justify-center flex flex-wrap">
       <transition name="p">
       <CartComponent
